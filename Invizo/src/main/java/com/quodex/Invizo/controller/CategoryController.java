@@ -14,9 +14,7 @@ import org.springframework.web.server.ResponseStatusException;
 import java.util.List;
 
 @RestController
-@RequestMapping("/categories")
 @RequiredArgsConstructor
-@CrossOrigin("*")
 public class CategoryController {
 
     private final CategoryService categoryService;
@@ -32,7 +30,7 @@ public class CategoryController {
      * @param file Image file (e.g., PNG, JPG)
      * @return The saved CategoryResponse with details
      */
-    @PostMapping
+    @PostMapping("/admin/categories")
     @ResponseStatus(HttpStatus.CREATED)
     public CategoryResponse addCategory(
             @RequestPart("category") String categoryString, // Category data as JSON string
@@ -61,7 +59,7 @@ public class CategoryController {
         return categoryService.getCategories();
     }
 
-    @GetMapping("/{categoryId}")
+    @GetMapping("/admin/categories/{categoryId}")
     public CategoryResponse getCategoryById(@PathVariable String categoryId){
         return categoryService.getCategoryById(categoryId);
     }
