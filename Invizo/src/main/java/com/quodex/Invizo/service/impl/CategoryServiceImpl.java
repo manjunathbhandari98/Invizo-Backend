@@ -4,6 +4,7 @@ import com.quodex.Invizo.entity.CategoryEntity;
 import com.quodex.Invizo.io.CategoryRequest;
 import com.quodex.Invizo.io.CategoryResponse;
 import com.quodex.Invizo.repository.CategoryRepository;
+import com.quodex.Invizo.repository.ItemRepository;
 import com.quodex.Invizo.service.CategoryService;
 import com.quodex.Invizo.service.FileUploadService;
 import lombok.RequiredArgsConstructor;
@@ -22,6 +23,7 @@ public class CategoryServiceImpl implements CategoryService {
     private final CategoryRepository categoryRepository;
 
     private final FileUploadService fileUploadService;
+    private final ItemRepository itemRepository;
 
     @Override
     public CategoryResponse addCategory(CategoryRequest request, MultipartFile file) {
@@ -63,12 +65,14 @@ public class CategoryServiceImpl implements CategoryService {
 
     // Converts entity to response DTO
     private CategoryResponse convertToResponse(CategoryEntity newCategory) {
+        Integer totalItems = itemRepository.countByCategoryId(newCategory.getId());
         return CategoryResponse.builder()
                 .categoryId(newCategory.getCategoryId())
                 .name(newCategory.getName())
                 .description(newCategory.getDescription())
                 .bgColor(newCategory.getBgColor())
                 .imgUrl(newCategory.getImgUrl())
+                .itemsCount(totalItems)
                 .createdAt(newCategory.getCreatedAt())
                 .updatedAt(newCategory.getUpdatedAt())
                 .build();

@@ -17,6 +17,7 @@ public class UserController  {
     private final UserService userService;
 
     @PostMapping("/register")
+    @ResponseStatus(HttpStatus.CREATED)
     public UserResponse registerUser(@RequestBody UserRequest user){
         try{
             return userService.createUser(user);
@@ -31,6 +32,7 @@ public class UserController  {
     }
 
     @DeleteMapping("/user/{userId}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteUser(@PathVariable String userId){
         try{
             userService.deleteUsers(userId);

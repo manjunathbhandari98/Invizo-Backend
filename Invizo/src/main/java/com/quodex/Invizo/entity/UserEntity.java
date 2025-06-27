@@ -27,6 +27,7 @@ public class UserEntity {
     private String email;
     @Column(nullable = false)
     private String password;
+    @Enumerated(EnumType.STRING)
     private Role role;
     private String name;
     @CreationTimestamp
