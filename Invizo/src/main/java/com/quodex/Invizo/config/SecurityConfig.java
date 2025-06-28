@@ -92,7 +92,7 @@ public class SecurityConfig {
                         .requestMatchers("/login", "/encode").permitAll()
 
                         // These endpoints require USER or ADMIN roles
-                        .requestMatchers("/categories", "/items").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers("/categories", "/items","/orders","/payments").hasAnyRole("USER", "ADMIN")
 
                         // These are restricted to ADMIN only
                         .requestMatchers("/admin/**").hasRole("ADMIN")
