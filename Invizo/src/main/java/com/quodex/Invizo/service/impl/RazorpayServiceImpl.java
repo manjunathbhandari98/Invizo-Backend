@@ -1,14 +1,30 @@
-// RazorpayServiceImpl.java
-//
-// ✅ Purpose:
-// This service handles the integration with the Razorpay payment gateway.
-// It is used to create payment orders on Razorpay's server, which can then be paid by the customer.
-// The `createOrder` method is typically used before redirecting the customer to Razorpay checkout.
-//
-// ✅ What it does:
-// - Reads Razorpay credentials from application properties
-// - Creates a Razorpay order via API
-// - Returns structured order data (as RazorpayOrderResponse)
+/**
+ * RazorpayServiceImpl.java
+ *
+ * This class handles the integration with Razorpay's Payment Gateway.
+ * It provides a service to create Razorpay orders that are required to
+ * initiate online payments from the frontend (React, Angular, etc.).
+ *
+ * What it does:
+ * - Connects to Razorpay using your API key and secret
+ * - Sends a request to create an order in Razorpay
+ * - Returns the order ID and related details back to the frontend
+ *
+ * Why do we need this?
+ * Razorpay **requires a backend call** to create an order securely using your secret key.
+ * You **should never expose your Razorpay secret key** to the frontend — this service ensures
+ * all sensitive interactions happen on the server side.
+ *
+ * Flow:
+ * Frontend → calls `/create-order` API → this service → Razorpay → returns order → frontend shows payment screen.
+ *
+ *  Response:
+ * Converts Razorpay’s raw response to a clean Java object (`RazorpayOrderResponse`)
+ * for easier handling in your app.
+ *
+ * This is part of the payment layer of your application.
+ */
+
 
 package com.quodex.Invizo.service.impl;
 

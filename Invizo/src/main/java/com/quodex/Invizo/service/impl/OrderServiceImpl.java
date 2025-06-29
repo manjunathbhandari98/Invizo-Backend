@@ -1,3 +1,30 @@
+/**
+ * OrderServiceImpl.java
+ *
+ * This class handles the complete business logic for creating, storing, deleting,
+ * and verifying orders in the system. It acts as the **main service layer** between
+ * the controller (API layer) and the database.
+ *
+ *  Core Responsibilities:
+ * - Create a new order with customer and item details
+ * - Save the order and its items in the database
+ * - Handle payment status (CASH or ONLINE)
+ * - Verify Razorpay payment authenticity using HMAC SHA256
+ * - Delete an order by ID
+ * - Fetch latest orders for admin dashboard or order listing
+ *
+ *  Razorpay Integration:
+ * If the user pays online, the payment verification step ensures the
+ * payment is secure by matching Razorpay's signature using your secret key.
+ *
+ * 💡 Why is this needed?
+ * Because we should never trust the frontend payment response blindly.
+ * Verifying Razorpay's signature helps protect against fake transactions.
+ *
+ *  This service is injected in controllers to provide order-related operations.
+ */
+
+
 package com.quodex.Invizo.service.impl;
 
 import com.quodex.Invizo.entity.OrderEntity;
@@ -9,8 +36,11 @@ import com.quodex.Invizo.service.OrderService;
 import com.quodex.Invizo.util.PaymentMethod;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
+import java.awt.print.Pageable;
+import java.time.LocalDate;
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -181,6 +211,28 @@ public class OrderServiceImpl implements OrderService {
 
         // 5. Return the updated order response
         return convertToResponse(existingOrder);
+    }
+
+    @Override
+    public Double sumSalesByDate(LocalDate date) {
+        // Calls the repository method to calculate the total sales amount (grandTotal)
+        // for all orders created on the given date
+        return orderRepository.sumSalesByDate(date);
+    }
+
+    @Override
+    public Long countByOrderDate(LocalDate date) {
+        // Calls the repository method to count how many orders were placed
+        // on the given date
+        return orderRepository.countByOrderDate(date);
+    }
+
+    @Override
+    public List<OrderResponse> findRecentOrders() {
+        return orderRepository.findTop5RecentOrdersNative()
+                .stream()
+                .map(this::convertToResponse)
+                .collect(Collectors.toList());
     }
 
     /**
